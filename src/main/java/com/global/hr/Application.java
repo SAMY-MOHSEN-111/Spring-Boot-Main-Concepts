@@ -4,8 +4,10 @@ import com.global.setter_constructor.Coach;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.core.env.Environment;
 
 @SpringBootApplication(
         scanBasePackages = {
@@ -22,6 +24,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 //)
 public class Application {
     private Coach coach;
+    @Value("${image.location.path}")
+    private String path;
+    
+    @Autowired
+    private Environment environment;
 
     @Autowired
     public Application(@Qualifier("footballCoach") Coach coach) {
@@ -32,9 +39,12 @@ public class Application {
         this.coach = coach;
     }
 
+    // setter injection overrides constructor injection
     @PostConstruct
     public void checkSetterOrConstructor(){
         coach.giveTraining();
+        System.out.println(path);
+        System.out.println(environment.getProperty("image.location.path"));
     }
 
 
